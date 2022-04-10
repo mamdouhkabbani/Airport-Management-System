@@ -1,0 +1,190 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="AirplainDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="AirPlain">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="brand" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="number" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="capacity" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="flights" Relationship="Self.FK_flight_AirPlain" FromRole="AirPlain" ToRole="flight" />
+  </EntityType>
+  <EntityType Name="City">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="flights" Relationship="Self.FK_flight_City" FromRole="City" ToRole="flight" />
+    <NavigationProperty Name="flights1" Relationship="Self.FK_flight_City1" FromRole="City" ToRole="flight" />
+  </EntityType>
+  <EntityType Name="Customer">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="first_name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="last_name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="passport_no" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="nationality" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="phone_no" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="email" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="Resrvaations" Relationship="Self.FK_Resrvaation_Customer" FromRole="Customer" ToRole="Resrvaation" />
+  </EntityType>
+  <EntityType Name="flight">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="time" Type="Double" Nullable="false" />
+    <Property Name="ArriveDate" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="DepartureDate" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="Distance" Type="Double" Nullable="false" />
+    <Property Name="Capacity" Type="Int32" Nullable="false" />
+    <Property Name="FromCity" Type="Int32" />
+    <Property Name="ToCity" Type="Int32" />
+    <Property Name="AirPlainId" Type="Int32" />
+    <NavigationProperty Name="AirPlain" Relationship="Self.FK_flight_AirPlain" FromRole="flight" ToRole="AirPlain" />
+    <NavigationProperty Name="City" Relationship="Self.FK_flight_City" FromRole="flight" ToRole="City" />
+    <NavigationProperty Name="City1" Relationship="Self.FK_flight_City1" FromRole="flight" ToRole="City" />
+    <NavigationProperty Name="Resrvaations" Relationship="Self.FK_Resrvaation_flight" FromRole="flight" ToRole="Resrvaation" />
+  </EntityType>
+  <EntityType Name="Resrvaation">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="R_Date" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="flightId" Type="Int32" Nullable="false" />
+    <Property Name="CustomerId" Type="Int32" Nullable="false" />
+    <Property Name="ticketId" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Customer" Relationship="Self.FK_Resrvaation_Customer" FromRole="Resrvaation" ToRole="Customer" />
+    <NavigationProperty Name="flight" Relationship="Self.FK_Resrvaation_flight" FromRole="Resrvaation" ToRole="flight" />
+    <NavigationProperty Name="Tickt" Relationship="Self.FK_Resrvaation_Tickt" FromRole="Resrvaation" ToRole="Tickt" />
+  </EntityType>
+  <EntityType Name="Tickt">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="type" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="available" Type="Boolean" Nullable="false" />
+    <Property Name="price" Type="Double" Nullable="false" />
+    <NavigationProperty Name="Resrvaations" Relationship="Self.FK_Resrvaation_Tickt" FromRole="Tickt" ToRole="Resrvaation" />
+  </EntityType>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="username" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="type" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_flight_AirPlain">
+    <End Role="AirPlain" Type="Self.AirPlain" Multiplicity="0..1" />
+    <End Role="flight" Type="Self.flight" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="AirPlain">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="flight">
+        <PropertyRef Name="AirPlainId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_flight_City">
+    <End Role="City" Type="Self.City" Multiplicity="0..1" />
+    <End Role="flight" Type="Self.flight" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="City">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="flight">
+        <PropertyRef Name="ToCity" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_flight_City1">
+    <End Role="City" Type="Self.City" Multiplicity="0..1" />
+    <End Role="flight" Type="Self.flight" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="City">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="flight">
+        <PropertyRef Name="FromCity" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Resrvaation_Customer">
+    <End Role="Customer" Type="Self.Customer" Multiplicity="1" />
+    <End Role="Resrvaation" Type="Self.Resrvaation" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Customer">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Resrvaation">
+        <PropertyRef Name="CustomerId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Resrvaation_flight">
+    <End Role="flight" Type="Self.flight" Multiplicity="1" />
+    <End Role="Resrvaation" Type="Self.Resrvaation" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="flight">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="Resrvaation">
+        <PropertyRef Name="flightId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Resrvaation_Tickt">
+    <End Role="Tickt" Type="Self.Tickt" Multiplicity="1" />
+    <End Role="Resrvaation" Type="Self.Resrvaation" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Tickt">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Resrvaation">
+        <PropertyRef Name="ticketId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="AirplainDBEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="AirPlains" EntityType="Self.AirPlain" />
+    <EntitySet Name="Cities" EntityType="Self.City" />
+    <EntitySet Name="Customers" EntityType="Self.Customer" />
+    <EntitySet Name="flights" EntityType="Self.flight" />
+    <EntitySet Name="Resrvaations" EntityType="Self.Resrvaation" />
+    <EntitySet Name="Tickts" EntityType="Self.Tickt" />
+    <EntitySet Name="Users" EntityType="Self.User" />
+    <AssociationSet Name="FK_flight_AirPlain" Association="Self.FK_flight_AirPlain">
+      <End Role="AirPlain" EntitySet="AirPlains" />
+      <End Role="flight" EntitySet="flights" />
+    </AssociationSet>
+    <AssociationSet Name="FK_flight_City" Association="Self.FK_flight_City">
+      <End Role="City" EntitySet="Cities" />
+      <End Role="flight" EntitySet="flights" />
+    </AssociationSet>
+    <AssociationSet Name="FK_flight_City1" Association="Self.FK_flight_City1">
+      <End Role="City" EntitySet="Cities" />
+      <End Role="flight" EntitySet="flights" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Resrvaation_Customer" Association="Self.FK_Resrvaation_Customer">
+      <End Role="Customer" EntitySet="Customers" />
+      <End Role="Resrvaation" EntitySet="Resrvaations" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Resrvaation_flight" Association="Self.FK_Resrvaation_flight">
+      <End Role="flight" EntitySet="flights" />
+      <End Role="Resrvaation" EntitySet="Resrvaations" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Resrvaation_Tickt" Association="Self.FK_Resrvaation_Tickt">
+      <End Role="Tickt" EntitySet="Tickts" />
+      <End Role="Resrvaation" EntitySet="Resrvaations" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

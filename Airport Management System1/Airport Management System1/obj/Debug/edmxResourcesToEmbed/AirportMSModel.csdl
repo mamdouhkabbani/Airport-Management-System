@@ -1,0 +1,130 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="AirplainDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="AirPlain">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" />
+    <Property Name="brand" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="number" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="capacity" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="City">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Customer">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" />
+    <Property Name="first_name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="last_name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="passport_no" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="nationality" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="phone_no" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="email" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="Tickts" Relationship="AirplainDBModel.FK_Tickt_Customer" FromRole="Customer" ToRole="Tickt" />
+  </EntityType>
+  <EntityType Name="flight">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" />
+    <Property Name="fromcity" Type="Int32" Nullable="false" />
+    <Property Name="tocity" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Tickts" Relationship="AirplainDBModel.FK_Tickt_flight" FromRole="flight" ToRole="Tickt" />
+  </EntityType>
+  <EntityType Name="Tickt">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" />
+    <Property Name="flight_Id" Type="Int32" Nullable="false" />
+    <Property Name="type" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="available" Type="Boolean" Nullable="false" />
+    <Property Name="customerId" Type="Int32" />
+    <NavigationProperty Name="Customer" Relationship="AirplainDBModel.FK_Tickt_Customer" FromRole="Tickt" ToRole="Customer" />
+    <NavigationProperty Name="flight" Relationship="AirplainDBModel.FK_Tickt_flight" FromRole="Tickt" ToRole="flight" />
+    <NavigationProperty Name="Resrvaations" Relationship="AirplainDBModel.FK_Resrvaation_Tickt" FromRole="Tickt" ToRole="Resrvaation" />
+  </EntityType>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" />
+    <Property Name="username" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="type" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+  </EntityType>
+  <EntityContainer Name="AirplainDBEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="AirPlains" EntityType="Self.AirPlain" />
+    <EntitySet Name="Cities" EntityType="Self.City" />
+    <EntitySet Name="Customers" EntityType="Self.Customer" />
+    <EntitySet Name="flights" EntityType="Self.flight" />
+    <EntitySet Name="Tickts" EntityType="Self.Tickt" />
+    <EntitySet Name="Users" EntityType="Self.User" />
+    <EntitySet Name="Resrvaations" EntityType="AirplainDBModel.Resrvaation" />
+    <AssociationSet Name="FK_Tickt_Customer" Association="AirplainDBModel.FK_Tickt_Customer">
+      <End Role="Customer" EntitySet="Customers" />
+      <End Role="Tickt" EntitySet="Tickts" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Tickt_flight" Association="AirplainDBModel.FK_Tickt_flight">
+      <End Role="flight" EntitySet="flights" />
+      <End Role="Tickt" EntitySet="Tickts" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Resrvaation_Tickt" Association="AirplainDBModel.FK_Resrvaation_Tickt">
+      <End Role="Tickt" EntitySet="Tickts" />
+      <End Role="Resrvaation" EntitySet="Resrvaations" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Resrvaation">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" />
+    <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="price" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="ticketId" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Tickt" Relationship="AirplainDBModel.FK_Resrvaation_Tickt" FromRole="Resrvaation" ToRole="Tickt" />
+  </EntityType>
+  <Association Name="FK_Tickt_Customer">
+    <End Type="AirplainDBModel.Customer" Role="Customer" Multiplicity="0..1" />
+    <End Type="AirplainDBModel.Tickt" Role="Tickt" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Customer">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Tickt">
+        <PropertyRef Name="customerId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Tickt_flight">
+    <End Type="AirplainDBModel.flight" Role="flight" Multiplicity="1" />
+    <End Type="AirplainDBModel.Tickt" Role="Tickt" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="flight">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="Tickt">
+        <PropertyRef Name="flight_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Resrvaation_Tickt">
+    <End Type="AirplainDBModel.Tickt" Role="Tickt" Multiplicity="1" />
+    <End Type="AirplainDBModel.Resrvaation" Role="Resrvaation" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Tickt">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Resrvaation">
+        <PropertyRef Name="ticketId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>
